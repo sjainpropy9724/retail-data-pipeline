@@ -1,0 +1,49 @@
+name: Deployment with Automatic Rollback
+
+on:
+  workflow_dispatch:
+    inputs:
+      simulate_failure:
+        description: "Simulate a failed Databricks deployment/job?"
+        required: true
+        default: "true"
+        type: choice
+        options:
+          - "true"
+          - "false"
+
+jobs:
+  deploy_and_rollback:
+    name: Deploy & Auto-Rollback
+    runs-on: ubuntu-latest
+    environment: DEV
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Record last stable commit/tag
+        id: stable
+        run: |
+          LAST_GOOD=$(git rev-parse HEAD~1 2>/dev/null || git rev-parse HEAD)
+          echo "commit=$LAST_GOOD" >> "$GITHUB_OUTPUT"
+          echo "Last known stable ref: $LAST_GOOD"
+
+      - name: Deploy & Run Databricks Job (Simulated)
+        id: deploy
+        run: |
+          echo "Deploying retail pipeline to Databricks..."
+          if [ "${{ inputs.simulate_failure }}" = "true" ]; then
+            echo "::error::Simulated Databricks deployment/job failure!"
+            exit 1
+          fi
+          echo "Deployment and job execution succeeded!"
+
+      - name: Automatic Rollback on Failure
+        if: failure() && steps.deploy.outcome == 'failure'
+        run: |
+          echo "Deployment failed. Starting automatic rollback..."
+          git checkout "${{ steps.stable.outputs.commit }}" -- config/ src/ sql/
+          echo "Restored previous stable files from ${{ steps.stable.outputs.commit }}."
+          echo "Re-running last known good deployment (simulated)..."
