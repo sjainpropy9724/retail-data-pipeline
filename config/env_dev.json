@@ -1,0 +1,6 @@
+{
+  "env": "dev",
+  "catalog": "retail_dev",
+  "schema": "sales_data",
+  "cluster_size": "Small"
+}
