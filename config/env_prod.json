@@ -1,0 +1,6 @@
+{
+  "env": "prod",
+  "catalog": "retail_prod",
+  "schema": "sales_data",
+  "cluster_size": "Large"
+}
