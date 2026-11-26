@@ -1,0 +1,11 @@
+project-name: retail-data-pipeline
+environments:
+  dev:
+    branch: develop
+    catalog: retail_dev
+  qa:
+    branch: qa
+    catalog: retail_qa
+  prod:
+    branch: main
+    catalog: retail_prod
