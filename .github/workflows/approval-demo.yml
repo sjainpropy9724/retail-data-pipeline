@@ -1,0 +1,34 @@
+name: Environment Approval Demo
+
+on:
+  workflow-dispatch:
+
+jobs:
+  deploy_dev:
+    name: Deploy to DEV
+    runs-on: ubuntu-latest
+    environment: DEV
+    steps:
+      - name: Run DEV step
+        run: echo "Deploying to DEV..."
+
+  deploy_qa:
+    name: Deploy to QA
+    runs-on: ubuntu-latest
+    needs: deploy_dev
+    environment: QA
+    steps:
+      - name: Run QA Step
+        run: echo "Deploying to QA ..."
+
+  deploy-prod:
+    name: Deploy to PROD
+    runs-on: ubuntu-latest
+    needs: deploy_qa
+    environment: PROD
+    steps:
+      - name: Run PROD Step
+        run: echo "Deploying to PROD after manual approval!"
+    
+    
+  
