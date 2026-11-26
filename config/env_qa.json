@@ -1,0 +1,6 @@
+{
+  "env": "qa",
+  "catalog": "retail_qa",
+  "schema": "sales_data",
+  "cluster_size": "Medium"
+}
