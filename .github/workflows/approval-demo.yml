@@ -1,7 +1,7 @@
 name: Environment Approval Demo
 
 on:
-  workflow-dispatch:
+  workflow_dispatch:
 
 jobs:
   deploy_dev:
